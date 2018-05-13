@@ -211,7 +211,7 @@ class AlertsPlugin {
     };
     if (!alarm.skipOKMetric) {
       // add in OK metric
-      cf[logMetricCFRefOK]: {
+      cf[logMetricCFRefOK] = {
         Type: 'AWS::Logs::MetricFilter',
         DependsOn: cfLogName,
         Properties: {

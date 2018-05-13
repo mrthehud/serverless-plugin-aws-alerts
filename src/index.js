@@ -201,7 +201,7 @@ class AlertsPlugin {
           FilterPattern: alarm.pattern,
           LogGroupName: logGroupName,
           MetricTransformations: [{
-            MetricValue: 1,
+            MetricValue: alarm.metricValue,
             MetricNamespace: metricNamespace,
             MetricName: metricName
           }]

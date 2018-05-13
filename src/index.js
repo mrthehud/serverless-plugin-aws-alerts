@@ -192,7 +192,7 @@ class AlertsPlugin {
     const metricNamespace = this.providerNaming.getStackName();
     const logGroupName = this.providerNaming.getLogGroupName(functionObj.name);
     const metricName = this.naming.getPatternMetricName(alarm.metric, normalizedFunctionName);
-    const metricValue = alarm.metricValue ? 1 : alarm.metricValue;
+    const metricValue = alarm.metricValue ? alarm.metricValue : 1;
 
     return {
       [logMetricCFRefALERT]: {

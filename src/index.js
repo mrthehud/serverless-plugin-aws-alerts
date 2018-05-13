@@ -78,9 +78,10 @@ class AlertsPlugin {
     const alarmActions = [];
     const insufficientDataActions = [];
 
-    if (alertTopics.ok) {
-      okActions.push(alertTopics.ok);
-    }
+    // SC: removed okActions
+    //if (alertTopics.ok) {
+    //  okActions.push(alertTopics.ok);
+    //}
 
     if (alertTopics.alarm) {
       alarmActions.push(alertTopics.alarm);

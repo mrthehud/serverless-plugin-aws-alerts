@@ -194,7 +194,7 @@ class AlertsPlugin {
     const metricValue = alarm.metricValue ? alarm.metricValue : 1;
 
     // Always include ALERT metric
-    cf = {
+    this.cf = {
       [logMetricCFRefALERT]: {
         Type: 'AWS::Logs::MetricFilter',
         DependsOn: cfLogName,
@@ -211,7 +211,7 @@ class AlertsPlugin {
     };
     if (!alarm.skipOKMetric) {
       // add in OK metric
-      cf[logMetricCFRefOK] = {
+      this.cf[logMetricCFRefOK] = {
         Type: 'AWS::Logs::MetricFilter',
         DependsOn: cfLogName,
         Properties: {
@@ -225,7 +225,7 @@ class AlertsPlugin {
         }
       };
     }
-    return cf;
+    return this.cf;
   }
 
   compileAlarms(config, definitions, alertTopics) {

@@ -193,55 +193,39 @@ class AlertsPlugin {
     const metricName = this.naming.getPatternMetricName(alarm.metric, normalizedFunctionName);
     const metricValue = alarm.metricValue ? alarm.metricValue : 1;
 
-    if (alarm.skipOKMetric) {
-      // create only ALERT metric
-      return {
-        [logMetricCFRefALERT]: {
-          Type: 'AWS::Logs::MetricFilter',
-          DependsOn: cfLogName,
-          Properties: {
-            FilterPattern: alarm.pattern,
-            LogGroupName: logGroupName,
-            MetricTransformations: [{
-              MetricValue: metricValue,
-              MetricNamespace: metricNamespace,
-              MetricName: metricName
-            }]
-          }
+    // Always include ALERT metric
+    cf = {
+      [logMetricCFRefALERT]: {
+        Type: 'AWS::Logs::MetricFilter',
+        DependsOn: cfLogName,
+        Properties: {
+          FilterPattern: alarm.pattern,
+          LogGroupName: logGroupName,
+          MetricTransformations: [{
+            MetricValue: metricValue,
+            MetricNamespace: metricNamespace,
+            MetricName: metricName
+          }]
         }
-      };
-    } else {
-      // create both ALERT and OK metrics
-      return {
-        [logMetricCFRefALERT]: {
-          Type: 'AWS::Logs::MetricFilter',
-          DependsOn: cfLogName,
-          Properties: {
-            FilterPattern: alarm.pattern,
-            LogGroupName: logGroupName,
-            MetricTransformations: [{
-              MetricValue: metricValue,
-              MetricNamespace: metricNamespace,
-              MetricName: metricName
-            }]
-          }
-        },
-        [logMetricCFRefOK]: {
-          Type: 'AWS::Logs::MetricFilter',
-          DependsOn: cfLogName,
-          Properties: {
-            FilterPattern: '',
-            LogGroupName: logGroupName,
-            MetricTransformations: [{
-              MetricValue: 0,
-              MetricNamespace: metricNamespace,
-              MetricName: metricName
-            }]
-          }
+      }
+    };
+    if (!alarm.skipOKMetric) {
+      // add in OK metric
+      cf[logMetricCFRefOK]: {
+        Type: 'AWS::Logs::MetricFilter',
+        DependsOn: cfLogName,
+        Properties: {
+          FilterPattern: '',
+          LogGroupName: logGroupName,
+          MetricTransformations: [{
+            MetricValue: 0,
+            MetricNamespace: metricNamespace,
+            MetricName: metricName
+          }]
         }
       };
     }
-
+    return cf;
   }
 
   compileAlarms(config, definitions, alertTopics) {

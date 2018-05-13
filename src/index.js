@@ -206,20 +206,20 @@ class AlertsPlugin {
             MetricName: metricName
           }]
         }
-      },
-      [logMetricCFRefOK]: {
-        Type: 'AWS::Logs::MetricFilter',
-        DependsOn: cfLogName,
-        Properties: {
-          FilterPattern: '',
-          LogGroupName: logGroupName,
-          MetricTransformations: [{
-            MetricValue: 0,
-            MetricNamespace: metricNamespace,
-            MetricName: metricName
-          }]
-        }
-      }
+      }//,  // SC removed these:
+      //[logMetricCFRefOK]: {
+      //  Type: 'AWS::Logs::MetricFilter',
+      //  DependsOn: cfLogName,
+      //  Properties: {
+      //    FilterPattern: '',
+      //    LogGroupName: logGroupName,
+      //    MetricTransformations: [{
+      //      MetricValue: 0,
+      //      MetricNamespace: metricNamespace,
+      //      MetricName: metricName
+      //    }]
+      //  }
+      //}
     };
   }
 

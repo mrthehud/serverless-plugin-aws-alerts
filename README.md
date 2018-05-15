@@ -206,9 +206,9 @@ definitions:
 
 ## Collecting Custom Metrics
 
-By default for pattern based alarms this plugin will create a single SNS topic, and then 2 separate metrics:
-- <yourfilter>ALERT: this is set to trigger on your pattern, with a MetricValue of 1
-- <yourfilter>OK: this is set to trigger on *any* pattern, with a MetricValue of 0
+By default for pattern based alarms this plugin will create a single SNS topic, with 2 separate metrics feeding into it:
+- `<yourfilter>ALERT`: this is set to trigger on your pattern, with a MetricValue of 1
+- `<yourfilter>OK   `: this is set to trigger on *any* pattern, with a MetricValue of 0
 This default behavior makes it difficult to use the custom metrics for anything other than a simple occurance filter.
 
 The following additional arguments can be used with custom filters:
@@ -217,8 +217,8 @@ The following additional arguments can be used with custom filters:
         metricValue: <custom_metric_value>
 ```
 
-If "skipOKMetric" is true, then only the <yourfilter>ALERT filter will be created.
-If "metricValue" is specified, then this will be used instead of "1" for the metricValue for the <yourfilter>ALERT filter.
+If `skipOKMetric` is true, then only the <yourfilter>ALERT filter will be created.
+If `metricValue` is specified, then this will be used instead of "1" for the metricValue for the `<yourfilter>ALERT` filter.
 
 So, for example, if you want to create a filter to track the value of a custom parameter from your logfile, you can create
 

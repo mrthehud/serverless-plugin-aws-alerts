@@ -10,6 +10,7 @@ A Serverless plugin to easily add CloudWatch alarms to functions
 `npm i serverless-plugin-aws-alerts`
 
 NOTE: to install this fork (with support for `skipOKMetric` and `metricValue`), use:
+
 `npm install --save-dev git+https://git@github.com/chinatti/serverless-plugin-aws-alerts.git`
 
 ## Usage
@@ -211,15 +212,18 @@ By default for pattern based alarms this plugin will create a single SNS topic, 
 This default behavior makes it difficult to use the custom metrics for anything other than a simple occurance filter.
 
 The following additional arguments can be used with custom filters:
-```        skipOKMetric: true
-        metricValue: <custom_metric_value>```
+```yaml
+        skipOKMetric: true
+        metricValue: <custom_metric_value>
+```
 
 If "skipOKMetric" is true, then only the <yourfilter>ALERT filter will be created.
 If "metricValue" is specified, then this will be used instead of "1" for the metricValue for the <yourfilter>ALERT filter.
 
 So, for example, if you want to create a filter to track the value of a custom parameter from your logfile, you can create
 
-```functions:
+```yaml
+functions:
   my-lambda-function:
     alarms:
       - name: myCustomMetricAlarm
@@ -233,11 +237,13 @@ So, for example, if you want to create a filter to track the value of a custom p
         comparisonOperator: GreaterThanOrEqualToThreshold
         pattern: '{$.widget_count = *}'
         metricValue: '$.widget_count
-        skipOKMetric: true```
+        skipOKMetric: true
+```
 
 So if your lambda log looks like:
 
-```START RequestId: xxx Version: $LATEST
+```
+START RequestId: xxx Version: $LATEST
 Log File Message
 IS_STALL_CNT: {"widget_cnt": 4}
 END RequestId: xxx
@@ -247,7 +253,8 @@ START RequestId: yyy Version: $LATEST
 Log File Message
 IS_STALL_CNT: {"widget_cnt": 13}
 END RequestId: yyy
-REPORT RequestId: yyy	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB```
+REPORT RequestId: yyy	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB
+```
 
 Then you will see the metric be assigned 4, and then 13 (as extracted from the JSON in the logfile)
 

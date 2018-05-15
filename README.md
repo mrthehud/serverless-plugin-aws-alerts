@@ -9,6 +9,9 @@ A Serverless plugin to easily add CloudWatch alarms to functions
 ## Installation
 `npm i serverless-plugin-aws-alerts`
 
+NOTE: to install this fork (with support for `skipOKMetric` and `metricValue`), use:
+`npm install --save-dev git+https://git@github.com/chinatti/serverless-plugin-aws-alerts.git`
+
 ## Usage
 
 ```yaml
@@ -199,6 +202,54 @@ definitions:
     comparisonOperator: GreaterThanThreshold
     treatMissingData: missing
 ```
+
+## Collecting Custom Metrics
+
+By default for pattern based alarms this plugin will create a single SNS topic, and then 2 separate metrics:
+- <yourfilter>ALERT: this is set to trigger on your pattern, with a MetricValue of 1
+- <yourfilter>OK: this is set to trigger on *any* pattern, with a MetricValue of 0
+This default behavior makes it difficult to use the custom metrics for anything other than a simple occurance filter.
+
+The following additional arguments can be used with custom filters:
+```        skipOKMetric: true
+        metricValue: <custom_metric_value>```
+
+If "skipOKMetric" is true, then only the <yourfilter>ALERT filter will be created.
+If "metricValue" is specified, then this will be used instead of "1" for the metricValue for the <yourfilter>ALERT filter.
+
+So, for example, if you want to create a filter to track the value of a custom parameter from your logfile, you can create
+
+```functions:
+  my-lambda-function:
+    alarms:
+      - name: myCustomMetricAlarm
+        namespace: 'AWS/Lambda'
+        description: 'Tracks the current value of widget_cnt from cloudwatch log, alarm if a value >= 5 seen in the previous minute'
+        metric: widgetCount
+        threshold: 5
+        statistic: Maximum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        pattern: '{$.widget_count = *}'
+        metricValue: '$.widget_count
+        skipOKMetric: true```
+
+So if your lambda log looks like:
+
+```START RequestId: xxx Version: $LATEST
+Log File Message
+IS_STALL_CNT: {"widget_cnt": 4}
+END RequestId: xxx
+REPORT RequestId: xxx	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB
+
+START RequestId: yyy Version: $LATEST
+Log File Message
+IS_STALL_CNT: {"widget_cnt": 13}
+END RequestId: yyy
+REPORT RequestId: yyy	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB```
+
+Then you will see the metric be assigned 4, and then 13 (as extracted from the JSON in the logfile)
 
 ## License
 

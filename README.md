@@ -256,7 +256,7 @@ END RequestId: yyy
 REPORT RequestId: yyy	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB
 ```
 
-Then you will see the metric get a value of 4, and then a value of 13 (as extracted from the JSON in the logfile).  More details on the syntax for metricValue can be found [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html).
+Then you will see the metric get a value of 4, and then a value of 13 (as extracted from the JSON in the logfile).  More details on the syntax for metricValue and more complex examples can be found [here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html).
 
 ## License
 

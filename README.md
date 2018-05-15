@@ -244,13 +244,13 @@ So if your lambda log looks like:
 
 ```
 START RequestId: xxx Version: $LATEST
-Log File Message
+Log File Message from first lambda run
 IS_STALL_CNT: {"widget_cnt": 4}
 END RequestId: xxx
 REPORT RequestId: xxx	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB
 
 START RequestId: yyy Version: $LATEST
-Log File Message
+Log File Message from next lambda run
 IS_STALL_CNT: {"widget_cnt": 13}
 END RequestId: yyy
 REPORT RequestId: yyy	Duration: 103.09 ms	Billed Duration: 200 ms 	Memory Size: 512 MB	Max Memory Used: 49 MB

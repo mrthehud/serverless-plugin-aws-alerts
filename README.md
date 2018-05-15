@@ -235,8 +235,8 @@ functions:
         period: 60
         evaluationPeriods: 1
         comparisonOperator: GreaterThanOrEqualToThreshold
-        pattern: '{$.widget_count = *}'
-        metricValue: '$.widget_count
+        pattern: '{$.widget_cnt = *}'
+        metricValue: '$.widget_cnt
         skipOKMetric: true
 ```
 

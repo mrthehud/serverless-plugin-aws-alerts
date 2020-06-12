@@ -74,6 +74,8 @@ functions:
         evaluationPeriods: 1
         datapointsToAlarm: 1
         comparisonOperator: GreaterThanOrEqualToThreshold
+      - name: functionInvocations
+        enabled: false # Disable this globally defined alarm for this lambda
 ```
 
 ## Multiple topic definitions

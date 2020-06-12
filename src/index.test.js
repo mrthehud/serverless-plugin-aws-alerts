@@ -558,6 +558,57 @@ describe('#index', function () {
       });
     });
 
+    it('should drop disabled default function alarms', () => {
+      const plugin = pluginFactory({
+        'function': [
+          'functionInvocations',
+          {
+            name: "functionDuration",
+            enabled: false,
+          },
+          {
+            name: "functionThrottles",
+            enabled: true,
+          }
+        ]
+      });
+
+      const config = plugin.getConfig();
+      const definitions = plugin.getDefinitions(config);
+      const alertTopics = plugin.compileAlertTopics(config);
+
+      plugin.compileAlarms(config, definitions, alertTopics);
+
+      const alarm = (name, threshold) => ({
+        Type: 'AWS::CloudWatch::Alarm',
+        Properties: {
+          Namespace: 'AWS/Lambda',
+          MetricName: name,
+          Threshold: threshold,
+          Statistic: 'Sum',
+          Period: 60,
+          EvaluationPeriods: 1,
+          DatapointsToAlarm: 1,
+          "AlarmDescription": undefined,
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          AlarmActions: [],
+          OKActions: [],
+          InsufficientDataActions: [],
+          Dimensions: [{
+            Name: 'FunctionName',
+            Value: {
+              Ref: 'FooLambdaFunction'
+            },
+          }],
+          TreatMissingData: 'missing',
+        }
+      })
+      expect(plugin.serverless.service.provider.compiledCloudFormationTemplate.Resources).toEqual({
+        FooFunctionInvocationsAlarm: alarm("Invocations", 100),
+        FooFunctionThrottlesAlarm: alarm("Throttles", 1),
+      });
+    });
+
     it('should compile log metric function alarms', () => {
       let config = {
         definitions: {

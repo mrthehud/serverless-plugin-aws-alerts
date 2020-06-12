@@ -283,8 +283,19 @@ class AlertsPlugin {
       const functionAlarms = this.getFunctionAlarms(functionObj, config, definitions);
       const alarms = globalAlarms.concat(functionAlarms).map(alarm => _.assign({ nameTemplate: config.nameTemplate, prefixTemplate: config.prefixTemplate }, alarm));
 
+      const ignored = {};
       const alarmStatements = alarms.reduce((statements, alarm) => {
         const key = this.naming.getAlarmCloudFormationRef(alarm.name, functionName);
+
+        if (typeof alarm.enabled !== 'undefined' && (alarm.enabled === false)) {
+          // Delete any previously added alarm for this key (eg global default).
+          delete statements[key];
+          ignored[key] = false;
+          return statements;
+        } else if (ignored[key] === false) {
+          return statements;
+        }
+
         const cf = this.getAlarmCloudFormation(alertTopics, alarm, functionName, normalizedFunctionName);
 
         statements[key] = cf;
